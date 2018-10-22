@@ -7,10 +7,16 @@ import FabButton from '@material-ui/core/Button'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { selectEvent } from '../Store/Actions/action-events';
-import { fetchEvents, addEvent, getEventByDate } from '../Store/Actions/_actions';
+import { 
+    fetchEvents, 
+    addEvent, 
+    getEventByDate,
+    fetchSingleEvent
+} from '../Store/Actions/_actions';
 import AddEvent from './AddEvent';
 import moment from 'moment';
 import ShowEvents from './ShowEvents';
+import ShowSingleEvent from './ShowSingleEvent';
 
 const $ = window.$;
 const timezone = "+06:00";
@@ -69,8 +75,8 @@ class Calender extends Component {
                     this.openModal(start, end, view.name);
                 },
                 eventClick: (event) => {
+                    this.props.fetchSingleEvent(event);
                     this.singleEventModalOpen();
-                    this.props.selectEvent(event);
                 },
                 eventRender: (event, element) => {
                     if (event.color) {
@@ -173,13 +179,14 @@ class Calender extends Component {
                 onCancel={ () => this.setState({ singleEventDialogVisible: false }) }
                 lockScroll={ false }
             >
-                <Dialog.Body>
+                <ShowSingleEvent/>
+                {/* <Dialog.Body>
                 <span>This is a message</span>
                 </Dialog.Body>
                 <Dialog.Footer className="dialog-footer">
                 <Button onClick={ () => this.setState({ singleEventDialogVisible: false }) }>Cancel</Button>
                 <Button type="primary" onClick={ () => this.setState({ singleEventDialogVisible: false }) }>Confirm</Button>
-                </Dialog.Footer>
+                </Dialog.Footer> */}
             </Dialog>
         )
     }
@@ -234,7 +241,8 @@ const matchDispatchToProps = (dispatch) => {
         selectEvent,
         fetchEvents,
         addEvent,
-        getEventByDate
+        getEventByDate,
+        fetchSingleEvent
     }, dispatch);
 }
 

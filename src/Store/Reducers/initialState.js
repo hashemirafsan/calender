@@ -1,6 +1,7 @@
 const state = {
     events: [],
     addEvent: {},
-    selectedEvent: []
+    selectedEvent: [],
+    singleEvent: {}
 }
 export default state;

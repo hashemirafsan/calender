@@ -23,12 +23,12 @@ class AllEvents extends Component {
             },
             {
                 label: "Action",
-                width: 150,
                 render: (row, column, index)=>{
                     return (
                         <span>
-                            <Button type="text" size="small" onClick={this.deleteRow.bind(this, index)}>Edit</Button>
-                            <Button type="text" size="small" onClick={this.deleteRow.bind(this, index)}>Remove</Button>
+                            <Button type="info" size="mini" icon="edit">Edit</Button>
+                            <Button type="warning" size="mini" icon="document">Copy</Button>
+                            <Button type="danger" size="mini" icon="delete2">Remove</Button>
                         </span>
                     )
                 }
