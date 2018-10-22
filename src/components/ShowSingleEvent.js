@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Card, Button, Dialog } from 'element-react';
+import { removeSingleEvent, copySingleEvent } from '../Store/Actions/_actions';
 
 class ShowSingleEvent extends Component {
     constructor(props) {
@@ -19,7 +20,7 @@ class ShowSingleEvent extends Component {
 
     render() {
         const event = this.getEvent();
-        console.log(event , "show");
+
         return(
             <div>
                 <Dialog.Body>
@@ -32,8 +33,24 @@ class ShowSingleEvent extends Component {
                             </span>
                             <span style={{ "float": "right" }}>
                                 <Button type="info" size="small" icon="edit">Edit</Button>
-                                <Button type="warning" size="small" icon="document">Copy</Button>
-                                <Button type="danger" size="small" icon="delete2">Remove</Button>
+                                <Button 
+                                    type="warning" 
+                                    size="small" 
+                                    icon="document"
+                                    onClick={() => {
+                                        this.props.copySingleEvent(event);
+                                        this.props.onCopy();
+                                    }}
+                                >Copy</Button>
+                                <Button 
+                                    type="danger" 
+                                    size="small" 
+                                    icon="delete2"
+                                    onClick={() => {
+                                        this.props.removeSingleEvent(event);
+                                        this.props.onSuccess();
+                                    }}
+                                >Remove</Button>
                             </span>
                             </div>
                         }
@@ -50,7 +67,9 @@ class ShowSingleEvent extends Component {
 }
 
 ShowSingleEvent.propTypes = {
-    evento: PropTypes.object
+    evento: PropTypes.object,
+    onSuccess: PropTypes.func,
+    onCopy: PropTypes.func
 }
 
 const mapStateToProps = (state) => {
@@ -59,4 +78,11 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(ShowSingleEvent);
+const matchDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        copySingleEvent,
+        removeSingleEvent
+    }, dispatch);
+}
+
+export default connect(mapStateToProps, matchDispatchToProps)(ShowSingleEvent);

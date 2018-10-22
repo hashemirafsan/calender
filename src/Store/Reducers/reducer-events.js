@@ -3,9 +3,10 @@ import InitialState from './initialState';
 import { 
     ADD_DATA,
     FETCH_DATA, 
-    SELECT_DATA, 
     UPDATE_DATA, 
-    REMOVE_DATA 
+    REMOVE_DATA,
+    SINGLE_EVENT_REMOVE,
+    SINGLE_EVENT_COPY
 } from '../Actions/actionTypes';
 
 const eventReducer = (state = InitialState.events, action) => {
@@ -16,10 +17,14 @@ const eventReducer = (state = InitialState.events, action) => {
             return action.payload;
         case FETCH_DATA:
             return action.payload;
+        case SINGLE_EVENT_REMOVE:
+            return action.payload;
+        case SINGLE_EVENT_COPY:
+            return action.payload;
         case UPDATE_DATA:
-            console.log("UPDate")
+            console.log("UPDate");
         case REMOVE_DATA:
-            console.log("Remove")
+            console.log("Remove");
     }
 }
 

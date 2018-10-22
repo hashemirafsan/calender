@@ -159,13 +159,6 @@ class Calender extends Component {
                     eventOnSave={this.saveEventByForm}
                     eventOnCancel={this.addEventModalClose}
                 />
-                {/* <Dialog.Body>
-                <span>This is a message</span>
-                </Dialog.Body>
-                <Dialog.Footer className="dialog-footer">
-                <Button onClick={ () => this.setState({ dialogVisible: false }) }>Cancel</Button>
-                <Button type="primary" onClick={ () => this.setState({ dialogVisible: false }) }>Confirm</Button>
-                </Dialog.Footer> */}
             </Dialog>
         )
     }
@@ -179,20 +172,32 @@ class Calender extends Component {
                 onCancel={ () => this.setState({ singleEventDialogVisible: false }) }
                 lockScroll={ false }
             >
-                <ShowSingleEvent/>
-                {/* <Dialog.Body>
-                <span>This is a message</span>
-                </Dialog.Body>
-                <Dialog.Footer className="dialog-footer">
-                <Button onClick={ () => this.setState({ singleEventDialogVisible: false }) }>Cancel</Button>
-                <Button type="primary" onClick={ () => this.setState({ singleEventDialogVisible: false }) }>Confirm</Button>
-                </Dialog.Footer> */}
+                <ShowSingleEvent
+                    onSuccess={this.singleEventRemoveSuccess}
+                    onCopy={this.singleEventCopy}
+                />
             </Dialog>
         )
     }
 
     singleEventModalOpen = () => {
         this.setState({ singleEventDialogVisible: true })
+    }
+
+    singleEventRemoveSuccess = () => {  
+        this.setState({ singleEventDialogVisible: false });
+
+        Notification({
+            message: 'Event Removed!',
+            type: 'success'
+        });
+    }
+
+    singleEventCopy = () => {
+        Notification({
+            message: 'Event Copied!',
+            type: 'success'
+        });
     }
 
     addNewEventModalOpen = () => {
