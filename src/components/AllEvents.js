@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Dialog, Table, Button } from 'element-react';
-
+import { fetchSingleEvent } from '../Store/Actions/_actions';
 class AllEvents extends Component {
     constructor(props) {
         super(props);
@@ -19,15 +19,22 @@ class AllEvents extends Component {
             {
                 label: "Title",
                 prop: "title",
-                width: 150,
             },
             {
                 label: "Action",
                 render: (row, column, index)=>{
                     return (
                         <span>
-                            <Button type="info" size="mini" icon="edit">Edit</Button>
-                            <Button type="warning" size="mini" icon="document">Copy</Button>
+                            <Button 
+                                type="info" 
+                                size="mini" 
+                                icon="view"
+                                onClick={() => {
+                                    this.props.fetchSingleEvent(row)
+                                    this.props.changeViewMode(true);
+                                    console.log(row, column, index)
+                                }}
+                            >View</Button>
                             <Button type="danger" size="mini" icon="delete2">Remove</Button>
                         </span>
                     )
@@ -36,12 +43,7 @@ class AllEvents extends Component {
         ]
     }
 
-    deleteRow = () => {
-
-    }
-
     render() {
-        console.log(this.props)
         return(
             <div>
                 <Dialog.Body>
@@ -58,10 +60,21 @@ class AllEvents extends Component {
     }
 }
 
+AllEvents.propTypes = {
+    changeViewMode: PropTypes.func
+}
+
 const mapStateToProps = (state) => {
     return {
         events: state.selectedEvent
     }
 }
 
-export default connect(mapStateToProps)(AllEvents);
+const matchDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        fetchSingleEvent
+    }, dispatch);
+}
+
+
+export default connect(mapStateToProps, matchDispatchToProps)(AllEvents);

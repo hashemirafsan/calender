@@ -10,7 +10,7 @@ import {
 
 
 const getEventByDate = (start, end, view) => {
-    let events = JSON.parse(localStorage.getItem('joom_event'));
+    let events = JSON.parse(localStorage.getItem('joom_event')) || [];
     let [limitStart, limitEnd] = view === "month" ? monthDateRange(start, end) : dateRange(start, end); 
     let allEvent = events.filter((eve) => {
         let s = new Date(eve.start).getTime();

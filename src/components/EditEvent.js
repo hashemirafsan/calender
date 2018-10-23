@@ -1,33 +1,55 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Dialog, DateRangePicker, Button, Notification } from 'element-react';
-import moment from 'moment';
-const uuidv4 = require('uuid/v4');
+import moment from "moment";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { Form, Button, Dialog, Input, DateRangePicker } from 'element-react';
+import { 
+    updateEditEvent
+} from '../Store/Actions/_actions';
 
-class AddEvent extends Component {
+
+class EditEvent extends Component {
     constructor(props) {
         super(props);
+        console.log(props)
+    }
+
+    componentWillReceiveProps(props) {
+        this.props =  props;
+        console.log(this.props)
     }
 
     state = {
         form: {
-            title: "",
-            start: this.props.start,
-            end: this.props.end,
+            id: this.props.event.id,
+            title: this.props.event.title,
+            start: this.props.event.start,
+            end: this.props.event.end
         }
     }
 
-    componentWillReceiveProps(props) {
-        this.props = props;
-        this.setFormDate();
+    sentForm = () => {
+        const { id, title, start, end } = this.state.form;
+        if (! title) {
+            Notification({
+                message: 'Title Required!',
+                type: 'warning'
+            });
+        } else {
+            this.props.updateEditEvent({
+                id,
+                title,
+                start: moment(start).format("YYYY-MM-DDThh:mm:ssZ"),
+                end:moment(end).format("YYYY-MM-DDThh:mm:ssZ"),
+                allDay: false
+            })
+
+            this.props.onSave();
+        }
+
     }
 
-    setFormDate = () => {
-        const state = { ...this.state };
-        state.form.start = this.props.start;
-        state.form.end = this.props.end;
-        this.setState({ state }); 
-    }
 
     setDateValue = () => {
         return [
@@ -36,27 +58,8 @@ class AddEvent extends Component {
         ]
     }
 
-    sentForm = () => {
-        const { title, start, end } = this.state.form;
-        const id = uuidv4();
-        if (! title) {
-            Notification({
-                message: 'Title Required!',
-                type: 'warning'
-            });
-        } else {
-            this.props.onSave(
-                id,
-                title,
-                moment(start).format("YYYY-MM-DDThh:mm:ssZ"),
-                moment(end).format("YYYY-MM-DDThh:mm:ssZ"),
-                false
-            )
-        }
-
-    }
-
     render() {
+        console.log(this.state);
         return(
             <div>
                 <Dialog.Body>
@@ -112,11 +115,20 @@ class AddEvent extends Component {
     }
 }
 
-AddEvent.propTypes = {
-    start: PropTypes.string,
-    end: PropTypes.string,
-    onSave: PropTypes.func,
-    onCancel: PropTypes.func
+const mapStateToProps = (state) => {
+    return {
+        event: state.singleEvent,
+    }
 }
 
-export default AddEvent;
+const matchDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        updateEditEvent
+    }, dispatch);
+}
+
+EditEvent.propTypes = {
+    onSave: PropTypes.func
+}
+
+export default connect(mapStateToProps, matchDispatchToProps)(EditEvent);

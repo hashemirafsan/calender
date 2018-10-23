@@ -1,6 +1,12 @@
 import { addEvent, fetchEvents } from './actionEvents';
 import { getEventByDate } from './selectEvents';
-import { fetchSingleEvent, removeSingleEvent, copySingleEvent } from './singleEvent';
+import { 
+    fetchSingleEvent, 
+    removeSingleEvent, 
+    copySingleEvent,
+    selectEditEvent,
+    updateEditEvent
+} from './singleEvent';
 
 export {
     addEvent,
@@ -8,5 +14,7 @@ export {
     getEventByDate,
     fetchSingleEvent,
     removeSingleEvent,
-    copySingleEvent
+    copySingleEvent,
+    selectEditEvent,
+    updateEditEvent
 };

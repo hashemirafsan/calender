@@ -41,7 +41,10 @@ class Calender extends Component {
         eventDialogVisible: false,
         singleEventDialogVisible: false,
         startDate: String(new Date()),
-        endDate: String(new Date())
+        endDate: String(new Date()),
+        start: null,
+        end: null,
+        view: $('#calender').fullCalendar('getView').name
     }
 
     componentWillReceiveProps(props) {
@@ -70,9 +73,8 @@ class Calender extends Component {
                 editable: true,
                 droppable: true, // this allows things to be dropped onto the calendar
                 select: (start, end, allDay) => {
-                    let view = $('#calender').fullCalendar('getView');
-                    this.props.getEventByDate(start, end, view.name);
-                    this.openModal(start, end, view.name);
+                    let view = $('#calender').fullCalendar('getView');        
+                    this.openModal(start, end ,view.name);
                 },
                 eventClick: (event) => {
                     this.props.fetchSingleEvent(event);
@@ -88,6 +90,11 @@ class Calender extends Component {
         }
     }
 
+    changeSelectState = () => {
+        const { start, end, view } = this.state;
+        this.props.getEventByDate(start, end, view);
+    }
+
     handleClickOpen = () => {
         this.setState({ open: true });
     };
@@ -100,9 +107,13 @@ class Calender extends Component {
         console.log(moment(end).subtract(1, "days"), "show momet")
         this.setState({ 
             dialogVisible: true,
+            start,
+            end,
+            view,
             startDate: String(moment(start).zone(timezone)),
             endDate: view === "month" ? String(moment(end).subtract(1, "days").zone(timezone)) : String(moment(end).zone(timezone))
         })
+        this.props.getEventByDate(start, end, view);
     }
 
     saveEventByForm = (id, title, start, end, allDay) => {
@@ -158,6 +169,8 @@ class Calender extends Component {
                     eventEnd={this.state.endDate}
                     eventOnSave={this.saveEventByForm}
                     eventOnCancel={this.addEventModalClose}
+                    onCopy={this.singleEventCopy}
+                    refreshEvents={this.changeSelectState}
                 />
             </Dialog>
         )
@@ -185,6 +198,8 @@ class Calender extends Component {
     }
 
     singleEventRemoveSuccess = () => {  
+        this.changeSelectState();
+
         this.setState({ singleEventDialogVisible: false });
 
         Notification({
@@ -194,6 +209,8 @@ class Calender extends Component {
     }
 
     singleEventCopy = () => {
+        this.changeSelectState();
+
         Notification({
             message: 'Event Copied!',
             type: 'success'

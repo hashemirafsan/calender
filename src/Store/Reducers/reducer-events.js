@@ -2,11 +2,10 @@ import DB from '../../Database/LocalStorage';
 import InitialState from './initialState';
 import { 
     ADD_DATA,
-    FETCH_DATA, 
-    UPDATE_DATA, 
-    REMOVE_DATA,
+    FETCH_DATA,
     SINGLE_EVENT_REMOVE,
-    SINGLE_EVENT_COPY
+    SINGLE_EVENT_COPY,
+    SINGLE_EVENT_EDIT_UPDATE
 } from '../Actions/actionTypes';
 
 const eventReducer = (state = InitialState.events, action) => {
@@ -21,10 +20,9 @@ const eventReducer = (state = InitialState.events, action) => {
             return action.payload;
         case SINGLE_EVENT_COPY:
             return action.payload;
-        case UPDATE_DATA:
-            console.log("UPDate");
-        case REMOVE_DATA:
-            console.log("Remove");
+        case SINGLE_EVENT_EDIT_UPDATE:
+            console.log(action.payload, "e")
+            return action.payload[1];
     }
 }
 
