@@ -27,13 +27,15 @@ class ColorCounter extends Component {
     setEventCount = () => {
         const { event } = this.props;
         let past = 0, upcoming = 0;
-        event.forEach((eves) => {
-            if (new Date(eves.end).getTime() < new Date().getTime()) {
-                past++;
-            } else {
-                upcoming++;
-            }
-        })
+        if (event.length) {
+            event.forEach((eves) => {
+                if (new Date(eves.end).getTime() < new Date().getTime()) {
+                    past++;
+                } else {
+                    upcoming++;
+                }
+            })
+        }
 
         return [past, upcoming];
     }
