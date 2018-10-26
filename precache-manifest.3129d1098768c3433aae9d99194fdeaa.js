@@ -12,15 +12,15 @@ self.__precacheManifest = [
     "url": "/calender/static/js/runtime~main.3a708fa4.js"
   },
   {
-    "revision": "12935607343abbf0fb16",
-    "url": "/calender/static/js/main.12935607.chunk.js"
+    "revision": "2258b803dcadb54c6c81",
+    "url": "/calender/static/js/main.2258b803.chunk.js"
   },
   {
     "revision": "547032cf3b40eb8d2e24",
     "url": "/calender/static/js/1.547032cf.chunk.js"
   },
   {
-    "revision": "12935607343abbf0fb16",
+    "revision": "2258b803dcadb54c6c81",
     "url": "/calender/static/css/main.b2cbf898.chunk.css"
   },
   {
@@ -28,7 +28,7 @@ self.__precacheManifest = [
     "url": "/calender/static/css/1.d5fcb4b3.chunk.css"
   },
   {
-    "revision": "4d1992c4abc6ba33357771720f5e9a42",
+    "revision": "c4193ef11373d9c1b383802fd0fe3c88",
     "url": "/calender/index.html"
   }
 ];
