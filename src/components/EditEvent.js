@@ -71,15 +71,24 @@ class EditEvent extends Component {
                 message: 'Title, Types Required!',
                 type: 'warning'
             });
-        } else {
+        } 
+        if (!data  || ! data.hasOwnProperty(type.toLowerCase())) {
+            Notification({
+                message: 'Description Required!',
+                type: 'warning'
+            });
+            return;
+        }else {
+            
             // send to parent component            
             this.props.updateEditEvent({
                 id,
                 title,
-                start: moment(start).format("YYYY-MM-DDThh:mm:ssZ"),
-                end:moment(end).format("YYYY-MM-DDThh:mm:ssZ"),
+                start: moment(start).format("YYYY-MM-DDTHH:mm:ssZ"),
+                end:moment(end).format("YYYY-MM-DDTHH:mm:ssZ"),
                 allDay: false,
-                type, data
+                type, 
+                data
             })
             // back to main view
             this.props.onSave();
@@ -134,6 +143,7 @@ class EditEvent extends Component {
                                 isShowTime={true}
                                 value={this.setDateValue()}
                                 placeholder="Pick a range"
+                                format="yyyy-MM-dd HH"
                                 onChange={date=>{
                                     const [ start, end ] = date;
                                     let state= { ...this.state }

@@ -98,13 +98,24 @@ class AddEvent extends Component {
                 message: 'Title, Types Required!',
                 type: 'warning'
             });
+            return;
+        } 
+        
+        if (!data || ! data.hasOwnProperty(type.toLowerCase())) {
+            Notification({
+                message: 'Description Required!',
+                type: 'warning'
+            });
+            return;
         } else {
             // send to parent component
             this.props.onSave(
                 id,
                 title,
-                moment(start).format("YYYY-MM-DDThh:mm:ssZ"),
-                moment(end).format("YYYY-MM-DDThh:mm:ssZ"),
+                start,
+                end,
+                // moment(start).format("YYYY-MM-DDThh:mm:ssZ"),
+                // moment(end).format("YYYY-MM-DDThh:mm:ssZ"),
                 false,
                 type,
                 data

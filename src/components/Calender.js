@@ -29,7 +29,7 @@ import ShowSingleEvent from './ShowSingleEvent';
 import ColorCounter from './ColorCounter';
 
 const $ = window.$;
-const timezone = "+06:00";
+const timezone = "+0600";
 const styles = theme => ({
     fab: {
       position: 'absolute',
@@ -85,6 +85,7 @@ class Calender extends Component {
                     right: 'prev,next today'
                 },
                 firstDay: 1,
+                timezone: 'local',
                 selectable: true,
                 defaultView: 'month',
                 axisFormat: 'h:mm',
@@ -94,6 +95,7 @@ class Calender extends Component {
                 editable: true,
                 droppable: false, // this allows things to be dropped onto the calendar
                 select: (start, end, allDay) => {
+                    console.log(start, end)
                     // Which view type is assigned [day, week, month]
                     let view = $('#calender').fullCalendar('getView');  
                     // Open Modal When each date selected      
@@ -108,12 +110,15 @@ class Calender extends Component {
                 eventRender: (event, element) => {
                     // Showing event past or present by color code ['red', 'green];
                     const eves = JSON.parse(localStorage.getItem('joom_event')).filter((i) => i.id === event.id);
-                    const [ item ] = eves;
-                    if (new Date(item.end).getTime() < new Date().getTime()) {
-                        element.css('background-color', '#ff6d6d');
-                    } else {
-                        element.css('background-color', '#13ce66');
+                    if (eves.length) {
+                        const [ item ] = eves;
+                        if (new Date(item.end).getTime() > new Date().getTime()) {
+                            element.css('background-color', '#13ce66');
+                        } else {
+                            element.css('background-color', '#ff6d6d');
+                        }
                     }
+                    
                 },
                 // Events data source
                 events
@@ -139,13 +144,14 @@ class Calender extends Component {
      * get data by start and end date and view name
      */
     openModal = (start, end, view) => {
+        console.log(start, end, "start")
         this.setState({ 
             dialogVisible: true,
             start,
             end,
             view,
-            startDate: String(moment(start).zone(timezone)),
-            endDate: view === "month" ? String(moment(end).subtract(1, "days").zone(timezone)) : String(moment(end).zone(timezone))
+            startDate: String(moment(start)),
+            endDate: String(moment(end)) 
         })
 
         // Fetch event by start date, end date and view name        

@@ -9,13 +9,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Card, Button, Dialog, Notification } from 'element-react';
+import { Card, Button, Dialog, Notification, Tag } from 'element-react';
 import { 
     selectEditEvent,
     removeSingleEvent, 
     copySingleEvent 
 } from '../Store/Actions/_actions';
 import EditEvent from './EditEvent';
+import moment from 'moment';
 
 class ShowSingleEvent extends Component {
     constructor(props) {
@@ -50,6 +51,10 @@ class ShowSingleEvent extends Component {
         });
     }
 
+    changeFormat = (date) => {
+        return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    }
+
     // Event Show method
     eventShow = (event) => {
         return(
@@ -59,7 +64,8 @@ class ShowSingleEvent extends Component {
                     header={
                         <div className="clearfix">
                         <span style={{ "lineHeight": "24px" }}>
-                            { event.title }
+                            { event.title } <br/>
+                             <Tag>{event.type}</Tag>
                         </span>
                         <span style={{ "float": "right" }}>
                             <Button 
@@ -97,11 +103,15 @@ class ShowSingleEvent extends Component {
                     }
                 >
                     <div className="text item">
-                        Start : { event.start }
+                        Start : { this.changeFormat(event.start) }
                     </div>
 
                     <div className="text item">
-                        End : { event.end }
+                        End : { this.changeFormat(event.end) }
+                    </div>
+
+                    <div className="text item">
+                        { moment(event.end).fromNow() }
                     </div>
 
                 </Card>

@@ -113,7 +113,7 @@ function pushNotification(registration) {
       let data = eventData();
 
       let nw = data.filter(i => {
-        return new Date(i.end).getTime() - 600  >= new Date().getTime() && !i.pre;
+        return new Date(i.end).getTime() === new Date().getTime() && !i.pre;
       })
       let seq = 0;
       nw.forEach(ev => {

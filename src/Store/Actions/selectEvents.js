@@ -2,11 +2,6 @@ import {
     SELECT_DATE_FETCH
 } from './actionTypes';
 
-import {
-    dateRange,
-    monthDateRange
-} from '../../Helpers/date';
-
 /**
  * this method fetch data 
  * by this @param
@@ -18,12 +13,10 @@ import {
  */
 const getEventByDate = (start, end, view) => {
     let events = JSON.parse(localStorage.getItem('joom_event')) || [];
-    let [limitStart, limitEnd] = view === "month" ? monthDateRange(start, end) : dateRange(start, end); 
     let allEvent = events.filter((eve) => {
         let s = new Date(eve.start).getTime();
         let e = new Date(eve.end).getTime();
-        console.log(s, e)
-        return s >= limitStart && e <= limitEnd;
+        return s >= new Date(start).getTime() && e <= new Date(end).getTime();
     });
 
     return {
