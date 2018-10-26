@@ -1,3 +1,10 @@
+/**-------------------------------
+ * This Component contain using
+ * for single events details 
+ * and actions to edit, copy and
+ * delete
+---------------------------------*/
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
@@ -20,13 +27,20 @@ class ShowSingleEvent extends Component {
     }
 
     state = {
-        startEdit: false
+        startEdit: this.props.refresh
     }
 
+    // get event from singleEvent or AllEvent
     getEvent = () => {
         return this.props.event || this.props.evento;
     }
 
+    // return in view
+    onCancel = () => {
+        this.setState({ startEdit: false });
+    }
+
+    // when update event to show success notifiction
     onEditSave = () => {
         this.setState({ startEdit: false });
 
@@ -36,6 +50,7 @@ class ShowSingleEvent extends Component {
         });
     }
 
+    // Event Show method
     eventShow = (event) => {
         return(
             <Dialog.Body>
@@ -94,18 +109,20 @@ class ShowSingleEvent extends Component {
         )
     }
 
+    // event edit method
     eventEdit = (event) => {
         return(
             <EditEvent
                 onSave={this.onEditSave}
+                onCancel={this.onCancel}
             />
         )
     }
 
+    // Logical renderning for showing show or edit component
     eventShowOrEdit = (event) => {
         if (!this.state.startEdit) {
             return this.eventShow(event);
-            console.log("why")
         } else {
             return this.eventEdit(event);
         }
@@ -122,19 +139,23 @@ class ShowSingleEvent extends Component {
     }
 }
 
+// ShowSingleEvent Prop types
 ShowSingleEvent.propTypes = {
     evento: PropTypes.object,
     onSuccess: PropTypes.func,
     onCopy: PropTypes.func,
-    onStartEdit: PropTypes.func
+    onStartEdit: PropTypes.func,
+    refresh: PropTypes.bool
 }
 
+// map store state
 const mapStateToProps = (state) => {
     return {
         event: state.singleEvent,
     }
 }
 
+// map store actions
 const matchDispatchToProps = (dispatch) => {
     return bindActionCreators({
         selectEditEvent,

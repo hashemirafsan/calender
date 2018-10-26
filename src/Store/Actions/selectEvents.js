@@ -7,8 +7,15 @@ import {
     monthDateRange
 } from '../../Helpers/date';
 
-
-
+/**
+ * this method fetch data 
+ * by this @param
+ * @param {*} start 
+ * @param {*} end 
+ * @param {*} view 
+ * 
+ * @return type, payload
+ */
 const getEventByDate = (start, end, view) => {
     let events = JSON.parse(localStorage.getItem('joom_event')) || [];
     let [limitStart, limitEnd] = view === "month" ? monthDateRange(start, end) : dateRange(start, end); 

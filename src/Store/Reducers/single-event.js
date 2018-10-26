@@ -7,6 +7,11 @@ import {
     SINGLE_EVENT_EDIT_UPDATE
 } from '../Actions/actionTypes';
 
+/**
+ * set state for specific action type
+ * @param {*} state 
+ * @param {*} action 
+ */
 const singleEvent = (state = InitialState.singleEvent, action) => {
     switch(action.type) {
         default:

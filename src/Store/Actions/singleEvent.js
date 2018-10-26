@@ -8,6 +8,10 @@ import {
 
 const uuid4 = require('uuid/v4');
 
+/**
+ * Fetch Single Events
+ * @param {} event 
+ */
 const fetchSingleEvent = (event) => {
     let events = JSON.parse(localStorage.getItem('joom_event'));
     const [ firstEvent ] = events.filter(e => e.id === event.id);
@@ -17,6 +21,10 @@ const fetchSingleEvent = (event) => {
     }
 }
 
+/**
+ * Copy event
+ * @param {} param 
+ */
 const copySingleEvent = ({ id, title, start, end, allDay }) => {
     let events = JSON.parse(localStorage.getItem('joom_event'));
     events.push({
@@ -30,6 +38,10 @@ const copySingleEvent = ({ id, title, start, end, allDay }) => {
     }
 }
 
+/**
+ * Remove single event
+ * @param {} param0 
+ */
 const removeSingleEvent = ({ id }) => {
     const events = JSON.parse(localStorage.getItem('joom_event')).filter((e) => {
         return e.id !== id;
@@ -42,6 +54,10 @@ const removeSingleEvent = ({ id }) => {
     }
 }
 
+/**
+ * Pass single event edit data
+ * @param {} event 
+ */
 const selectEditEvent = (event) => {
     return {
         type: SINGLE_EVENT_EDIT_SELECT,
@@ -49,6 +65,10 @@ const selectEditEvent = (event) => {
     }
 }
 
+/**
+ * Update Edit event
+ * @param event 
+ */
 const updateEditEvent = (event) => {
     let events = JSON.parse(localStorage.getItem('joom_event')).filter(e => e.id !== event.id);
     events.push(event);
@@ -60,6 +80,7 @@ const updateEditEvent = (event) => {
     }
 }
 
+// export methods
 export {
     fetchSingleEvent,
     removeSingleEvent,

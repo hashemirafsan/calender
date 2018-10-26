@@ -1,3 +1,10 @@
+/**-------------------------------
+ * This Component contain a table
+ * to display all the events for 
+ * selected day and go to the full
+ * details by view button.
+---------------------------------*/
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
@@ -11,7 +18,6 @@ class AllEvents extends Component {
 
     componentWillReceiveProps(props) {
         this.props = props;
-        console.log(props, 'yeah')
     }
 
     state = {
@@ -19,6 +25,7 @@ class AllEvents extends Component {
             {
                 label: "Title",
                 prop: "title",
+                width: "150px"
             },
             {
                 label: "Action",
@@ -32,10 +39,8 @@ class AllEvents extends Component {
                                 onClick={() => {
                                     this.props.fetchSingleEvent(row)
                                     this.props.changeViewMode(true);
-                                    console.log(row, column, index)
                                 }}
                             >View</Button>
-                            <Button type="danger" size="mini" icon="delete2">Remove</Button>
                         </span>
                     )
                 }
@@ -60,16 +65,19 @@ class AllEvents extends Component {
     }
 }
 
+// AllEvent Prop Types
 AllEvents.propTypes = {
     changeViewMode: PropTypes.func
 }
 
+// map selected event to props
 const mapStateToProps = (state) => {
     return {
         events: state.selectedEvent
     }
 }
 
+// map fetchSingle event to dispath in props
 const matchDispatchToProps = (dispatch) => {
     return bindActionCreators({
         fetchSingleEvent

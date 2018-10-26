@@ -8,6 +8,7 @@ import {
     updateEditEvent
 } from './singleEvent';
 
+// export all actions
 export {
     addEvent,
     fetchEvents,

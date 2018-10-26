@@ -1,3 +1,6 @@
+/**
+ * All Initial State
+ */
 const state = {
     events: [],
     addEvent: {},

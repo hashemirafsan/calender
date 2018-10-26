@@ -1,8 +1,23 @@
+/**-------------------------------
+ * This Component using for 
+ * add event
+---------------------------------*/
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Dialog, DateRangePicker, Button, Notification } from 'element-react';
+import { 
+    Form, 
+    Input, 
+    Dialog, 
+    DateRangePicker, 
+    Button,
+    Notification 
+} from 'element-react';
 import moment from 'moment';
+import TypeEvent from './TypeEvent';
+
 const uuidv4 = require('uuid/v4');
+
 
 class AddEvent extends Component {
     constructor(props) {
@@ -10,18 +25,35 @@ class AddEvent extends Component {
     }
 
     state = {
+        clear: false,
         form: {
             title: "",
             start: this.props.start,
             end: this.props.end,
+            type: "",
+            data: null
         }
     }
 
     componentWillReceiveProps(props) {
         this.props = props;
+        // set date in form when props again updated
         this.setFormDate();
     }
 
+    /** 
+     * When Different Type of data coming from
+     * Child Form '/type-component/' it update
+     * the data in state
+     */
+    eventTypeCompose = (type, data) => {
+        let state = { ...this.state };
+        state.form.type = type;
+        state.form.data = data;
+        this.setState({ state });
+    }
+
+    // set date in form when props again updated
     setFormDate = () => {
         const state = { ...this.state };
         state.form.start = this.props.start;
@@ -29,6 +61,12 @@ class AddEvent extends Component {
         this.setState({ state }); 
     }
 
+    /**
+     * Set Date value modified to use
+     * DateRangePicker Component 
+     * Default Value when Component
+     * Initiate
+     */
     setDateValue = () => {
         return [
             new Date(this.state.form.start),
@@ -36,22 +74,52 @@ class AddEvent extends Component {
         ]
     }
 
+    // change data clear 
+    clearToFalse = () => {
+        this.setState({ clear: true });
+
+
+        setTimeout(() => {
+            this.setState({ clear: false });
+        }, 2000);
+    }
+
+    /**
+     * send the data to main
+     * Calender Component to
+     * Store in that state 
+     */
     sentForm = () => {
-        const { title, start, end } = this.state.form;
+        const { title, start, end, type, data } = this.state.form;
         const id = uuidv4();
-        if (! title) {
+        if (! title && !type) {
+            // Notify if title and types are empty
             Notification({
-                message: 'Title Required!',
+                message: 'Title, Types Required!',
                 type: 'warning'
             });
         } else {
+            // send to parent component
             this.props.onSave(
                 id,
                 title,
                 moment(start).format("YYYY-MM-DDThh:mm:ssZ"),
                 moment(end).format("YYYY-MM-DDThh:mm:ssZ"),
-                false
+                false,
+                type,
+                data
             )
+            
+            // update state
+            const state = { ...this.state };
+            state.form.title = "";
+            state.form.data = null;
+            state.form.type = "";
+
+            this.setState({ state });
+            
+            // call clear
+            this.clearToFalse();
         }
 
     }
@@ -74,13 +142,18 @@ class AddEvent extends Component {
                             />
                         </Form.Item>
 
+                        <TypeEvent
+                            mode="add"
+                            composedTypeData={this.eventTypeCompose}
+                            onClear={this.state.clear}
+                        />
+
                         <Form.Item label="Duration">
                             <DateRangePicker
                                 isShowTime={true}
                                 value={this.setDateValue()}
                                 placeholder="Pick a range"
                                 onChange={date=>{
-                                    console.log('DateRangePicker1 changed: ', date)
                                     const [ start, end ] = date;
                                     let state= { ...this.state }
                                     state.form.start = start;
@@ -99,6 +172,7 @@ class AddEvent extends Component {
                         state.form.title = "";
                         this.setState({ state });
                         this.props.onCancel();
+                        this.clearToFalse();
                     } }>Cancel</Button>
 
                     <Button 
@@ -112,6 +186,7 @@ class AddEvent extends Component {
     }
 }
 
+// AddEvent Prop Types
 AddEvent.propTypes = {
     start: PropTypes.string,
     end: PropTypes.string,

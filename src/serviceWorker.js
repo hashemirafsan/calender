@@ -20,6 +20,19 @@ const isLocalhost = Boolean(
     )
 );
 
+function urlBase64ToUint8Array(base64String) {
+  const padding = "=".repeat((4 - base64String.length % 4) % 4)
+  const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/")
+
+  const rawData = window.atob(base64)
+  const outputArray = new Uint8Array(rawData.length)
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i)
+  }
+  return outputArray
+}
+
 export function register(config) {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
@@ -33,14 +46,17 @@ export function register(config) {
 
     window.addEventListener('load', () => {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
-
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
         checkValidServiceWorker(swUrl, config);
 
         // Add some additional logging to localhost, pointing developers to the
         // service worker/PWA documentation.
-        navigator.serviceWorker.ready.then(() => {
+        navigator.serviceWorker.ready.then((registration) => {
+          if (!registration.pushManager) {
+            return;
+          }
+          // pushNotification(registration);
           console.log(
             'This web app is being served cache-first by a service ' +
               'worker. To learn more, visit http://bit.ly/CRA-PWA'
@@ -54,10 +70,71 @@ export function register(config) {
   }
 }
 
+function updateData(id ,key, update) {
+  let events = JSON.parse(localStorage.getItem('joom_event')) || [];
+  let newEvent = [];
+  events.map((i) => {
+    if (i.id === id) {
+      i[key] = update;
+    }
+    newEvent.push(i);
+  })
+  localStorage.setItem('joom_event', JSON.stringify(newEvent));
+}
+
+function eventData() {
+  let events = JSON.parse(localStorage.getItem('joom_event')) || [];
+  let newEvent = []
+  events.map(i => {
+    if ('pre' in i && 'knock' in i) {
+      newEvent.push(i)
+    } else {
+      i.pre = false;
+      i.knock = false;
+      newEvent.push(i)
+    }
+  })
+  localStorage.setItem('joom_event', JSON.stringify(newEvent));
+  return newEvent;
+}
+
+
+function pushNotification(registration) {
+  const vapidPublicKey = "BDQZUzEODaPotGd2ptDnVUdJ4IWIvV5T4UFf-TM9OlGXgKxhoCPfrkENw1vkSuiIh_bsds5Hy2HQhjIAybVnfaU"
+  const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey)
+  registration.pushManager
+  .subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: convertedVapidKey
+  })
+  .then(subscribe => {
+    
+    setInterval(() => {
+      let data = eventData();
+
+      let nw = data.filter(i => {
+        return new Date(i.end).getTime() - 600  >= new Date().getTime() && !i.pre;
+      })
+      let seq = 0;
+      nw.forEach(ev => {
+        let{ title, type, data } = ev;
+        let tit = `${title} ${data[type.toLowerCase()]}`;
+        seq += 5000;
+        setTimeout(() => {
+          registration.showNotification(tit);
+          updateData(ev, 'pre', true);
+        }, seq)
+      })
+    }, 10000);
+  })
+  .catch(err => console.log(err))
+}
+
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then(registration => {
+      pushNotification(registration);
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         installingWorker.onstatechange = () => {
